@@ -1,20 +1,37 @@
 const express = require("express");
 const router = express.Router();
-const staffController = require("../../controllers/Uvindu_controllers/staffController"); // Ensure the path is correct
+const multer = require("multer");
+const path = require("path");
+const staffController = require("../../controllers/Uvindu_controllers/staffController");
+
+// Multer storage configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./uploads"); // Directory to store uploaded files
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+  },
+});
+
+const upload = multer({ storage });
 
 // GET all staff
-router.get("/staff", staffController.getAllStaff);  // Note the relative URL
+router.get("/staff", staffController.getAllStaff);
 
-// POST new staff
-router.post("/staff", staffController.addStaff);    // Note the relative URL
+// POST new staff (Now includes file upload)
+router.post("/staff", upload.single("profilePic"), staffController.addStaff);
 
-// POST attendance update
+// PUT update profile picture
+router.put("/staff/:id/profilePic", upload.single("profilePic"), staffController.updateProfilePicture);
+
+// POST update attendance
 router.post("/staff/attendance", staffController.updateAttendance);
 
 // GET active staff count
 router.get("/staff/active-count", staffController.getActiveStaffCount);
 
-// Route to delete staff
+// DELETE staff member
 router.delete("/staff/:id", staffController.deleteStaff);
 
 module.exports = router;

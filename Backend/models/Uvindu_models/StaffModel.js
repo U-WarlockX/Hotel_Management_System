@@ -109,8 +109,8 @@ const staffSchema = new mongoose.Schema({
     default: "Inactive",
   },
   profilePic: {
-    type: String, // Store the URL of the profile picture
-    default: "", // You can set a default image URL or leave it empty
+    type: String,
+    default: "",
   },
 }, { timestamps: true });
 

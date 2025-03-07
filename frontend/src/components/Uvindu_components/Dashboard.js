@@ -12,7 +12,6 @@ const Dashboard = () => {
   });
 
   const [staff, setStaff] = useState([]);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -98,95 +97,103 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      {/* Button to add new staff */}
-      <div className="text-right mb-6">
-        <button
-          onClick={handleAddStaff}
-          className="bg-green-600 text-white px-6 py-2 text-lg font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-        >
-          Add New Staff
-        </button>
-      </div>
+    <div className="min-h-screen bg-gray-100 p-6 flex items-center justify-center">
+      {/* Centered Content Wrapper */}
+      <div className="w-full max-w-7xl bg-white p-6 rounded-lg shadow-lg">
+        {/* Button to add new staff */}
+        <div className="text-right mb-6">
+          <button
+            onClick={handleAddStaff}
+            className="bg-green-600 text-white px-6 py-2 text-xs font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+          >
+            Add New Staff
+          </button>
+        </div>
 
-      <h2 className="text-3xl font-semibold text-gray-800 mb-6">Dashboard</h2>
 
-      {/* Grid Layout for Dashboard Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-        {/* Dashboard cards */}
-        <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-700">Total Staff</h3>
-          <p className="text-3xl font-bold text-gray-900">{staffStats.totalStaff}</p>
+        {/* Grid Layout for Dashboard Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          {/* Dashboard cards */}
+          <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+            <h3 className="text-xl font-semibold text-gray-700">Total Staff</h3>
+            <p className="text-lg font-bold text-gray-900">{staffStats.totalStaff}</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+            <h3 className="text-xl font-semibold text-gray-700">On Duty Today</h3>
+            <p className="text-lg font-bold text-blue-600">{staffStats.onDuty}</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+            <h3 className="text-xl font-semibold text-gray-700">Attendance Rate</h3>
+            <p className="text-lg font-bold text-yellow-500">{staffStats.attendanceRate}%</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+            <h3 className="text-xl font-semibold text-gray-700">Open Positions</h3>
+            <p className="text-lg font-bold text-red-600">{staffStats.openPositions}</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+            <h3 className="text-xl font-semibold text-gray-700">Active Staff</h3>
+            <p className="text-lg font-bold text-green-600">{staffStats.activeStaff}</p>
+          </div>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-700">On Duty Today</h3>
-          <p className="text-3xl font-bold text-blue-600">{staffStats.onDuty}</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-700">Attendance Rate</h3>
-          <p className="text-3xl font-bold text-yellow-500">{staffStats.attendanceRate}%</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-700">Open Positions</h3>
-          <p className="text-3xl font-bold text-red-600">{staffStats.openPositions}</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-700">Active Staff</h3>
-          <p className="text-3xl font-bold text-green-600">{staffStats.activeStaff}</p>
-        </div>
-      </div>
 
-      {/* Staff List Table */}
-      <div className="col-span-4 bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-6">
-        <h2 className="text-3xl font-semibold text-gray-800 mb-6">Current Staff</h2>
-        <div className="overflow-x-auto">
-          <table className="min-w-full table-auto text-left">
-            <thead>
-              <tr className="bg-gray-100 border-b">
-                <th className="py-3 px-6 text-sm font-medium text-gray-700">Profile</th>
-                <th className="py-3 px-6 text-sm font-medium text-gray-700">Name</th>
-                <th className="py-3 px-6 text-sm font-medium text-gray-700">Role</th>
-                <th className="py-3 px-6 text-sm font-medium text-gray-700">Department</th>
-                <th className="py-3 px-6 text-sm font-medium text-gray-700">Status</th>
-                <th className="py-3 px-6 text-sm font-medium text-gray-700">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {staff.map((staffMember) => (
-                <tr key={staffMember._id} className="border-b hover:bg-gray-50">
-                  <td className="py-3 px-6 text-sm text-gray-800">
-                    {/* Check if profilePic exists, and provide a fallback image */}
-                    <img
-                      src={
-                        staffMember.profilePic
-                          ? `http://localhost:5000/uploads/${staffMember.profilePic}`
-                          : "/default-avatar.jpg"
-                      }
-                      alt="Profile"
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
-                  </td>
-                  <td className="py-3 px-6 text-sm text-gray-800">
-                    {staffMember.firstName} {staffMember.lastName}
-                  </td>
-                  <td className="py-3 px-6 text-sm text-gray-600">{staffMember.jobTitle}</td>
-                  <td className="py-3 px-6 text-sm text-gray-600">{staffMember.department}</td>
-                  <td className="py-3 px-6 text-sm text-gray-600">
-                    {renderStatusBadge(staffMember.status)}
-                  </td>
-                  <td className="py-3 px-6 text-sm text-gray-600">
-                    <button
-                      onClick={() => handleDelete(staffMember._id)}
-                      className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {/* Staff List Table */}
+        <div className="col-span-4 bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-6">
+  <h2 className="text-lg font-semibold text-gray-800 mb-6">Current Staff</h2>
+  <div className="overflow-x-auto">
+    <div className="max-h-80 overflow-y-auto"> {/* Added max height and overflow */}
+      <table className="min-w-full table-auto text-left">
+        <thead>
+          <tr className="bg-gray-100 border-b">
+            <th className="py-3 px-6 text-sm font-medium text-gray-700">Profile</th>
+            <th className="py-3 px-6 text-sm font-medium text-gray-700">Name</th>
+            <th className="py-3 px-6 text-sm font-medium text-gray-700">Role</th>
+            <th className="py-3 px-6 text-sm font-medium text-gray-700">Department</th>
+            <th className="py-3 px-6 text-sm font-medium text-gray-700">Status</th>
+            <th className="py-3 px-6 text-sm font-medium text-gray-700">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {staff.slice(0, 5).map((staffMember) => (
+            <tr key={staffMember._id} className="border-b hover:bg-gray-50">
+              <td className="py-3 px-6 text-sm text-gray-800">
+                {/* Check if profilePic exists, and provide a fallback image */}
+                <img
+                  src={
+                    staffMember.profilePic
+                      ? `http://localhost:5000/uploads/${staffMember.profilePic}`
+                      : "/default-avatar.jpg"
+                  }
+                  alt="Profile"
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+              </td>
+              <td className="py-3 px-6 text-sm text-gray-800">
+                {staffMember.firstName} {staffMember.lastName}
+              </td>
+              <td className="py-3 px-6 text-sm text-gray-600">{staffMember.jobTitle}</td>
+              <td className="py-3 px-6 text-sm text-gray-600">{staffMember.department}</td>
+              <td className="py-3 px-6 text-sm text-gray-600">
+                {renderStatusBadge(staffMember.status)}
+              </td>
+              <td className="py-3 px-6 text-sm text-gray-600">
+                <button
+                  onClick={() => handleDelete(staffMember._id)}
+                  className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
       </div>
     </div>
   );

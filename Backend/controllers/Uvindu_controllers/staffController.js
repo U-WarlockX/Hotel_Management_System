@@ -3,17 +3,18 @@ const Staff = require("../../models/Uvindu_models/StaffModel");
 // Get all staff
 exports.getAllStaff = async (req, res) => {
   try {
-    const staff = await Staff.find(); // Get all staff data
-    res.status(200).json(staff); // Respond with the staff data
+    const staff = await Staff.find();
+    res.status(200).json(staff);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error fetching staff", error: err.message });
   }
 };
 
-// Add new staff
+// Add new staff with profile image upload
 exports.addStaff = async (req, res) => {
   const { firstName, lastName, email, phone, jobTitle, department, shifts } = req.body;
+  const profilePic = req.file ? req.file.filename : null; // Store filename if uploaded
 
   if (!firstName || !lastName || !email || !phone || !jobTitle || !department || !shifts) {
     return res.status(400).json({ message: "All fields are required." });
@@ -28,6 +29,7 @@ exports.addStaff = async (req, res) => {
     department,
     shifts,
     status: "Active",
+    profilePic, // Store profile image filename
   });
 
   try {
@@ -42,10 +44,33 @@ exports.addStaff = async (req, res) => {
   }
 };
 
+// Update staff profile picture
+exports.updateProfilePicture = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const profilePic = req.file ? req.file.filename : null; // Get uploaded file
+
+    if (!profilePic) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const updatedStaff = await Staff.findByIdAndUpdate(id, { profilePic }, { new: true });
+
+    if (!updatedStaff) {
+      return res.status(404).json({ message: "Staff member not found" });
+    }
+
+    res.status(200).json({ message: "Profile picture updated successfully", staff: updatedStaff });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error updating profile picture", error: err.message });
+  }
+};
+
 // Update attendance
 exports.updateAttendance = async (req, res) => {
   try {
-    const attendanceData = req.body; // { staffId1: true, staffId2: false, ... }
+    const attendanceData = req.body;
     for (let id in attendanceData) {
       await Staff.findByIdAndUpdate(id, { status: attendanceData[id] ? "Active" : "Inactive" });
     }

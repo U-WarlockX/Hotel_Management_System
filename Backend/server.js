@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
-const multer = require("multer"); // Import multer
-const staffRoutes = require("./routes/Uvindu_routes/staffRoutes"); // Check the relative path
+const staffRoutes = require("./routes/Uvindu_routes/staffRoutes");
 
 const app = express();
 
@@ -13,32 +12,11 @@ dotenv.config();
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static("uploads")); // Serve files from the 'uploads' directory
-
-// Multer setup for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./uploads"); // Directory to store uploaded files
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Filename with timestamp
-  }
-});
-
-const upload = multer({ storage: storage });
-
-// File upload route
-app.post("/api/upload", upload.single("profilePic"), (req, res) => {
-  if (req.file) {
-    // Send the uploaded file URL in the response
-    res.status(200).json({ imageUrl: `/uploads/${req.file.filename}` });
-  } else {
-    res.status(400).json({ message: "No file uploaded" });
-  }
-});
+app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Serve profile pictures
 
 // Routes
-app.use("/api", staffRoutes); // Prefix routes with '/api'
+app.use("/api", staffRoutes); // Use staff routes
 
 // MongoDB connection
 mongoose
