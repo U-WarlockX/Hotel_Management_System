@@ -11,10 +11,9 @@ exports.getAllStaff = async (req, res) => {
   }
 };
 
-// Add new staff with profile image upload
 exports.addStaff = async (req, res) => {
   const { firstName, lastName, email, phone, jobTitle, department, shifts } = req.body;
-  const profilePic = req.file ? req.file.filename : null; // Store filename if uploaded
+  const profilePic = req.file ? req.file.filename : null; 
 
   if (!firstName || !lastName || !email || !phone || !jobTitle || !department || !shifts) {
     return res.status(400).json({ message: "All fields are required." });
@@ -29,7 +28,7 @@ exports.addStaff = async (req, res) => {
     department,
     shifts,
     status: "Active",
-    profilePic, // Store profile image filename
+    profilePic,
   });
 
   try {
@@ -48,8 +47,7 @@ exports.addStaff = async (req, res) => {
 exports.updateProfilePicture = async (req, res) => {
   try {
     const { id } = req.params;
-    const profilePic = req.file ? req.file.filename : null; // Get uploaded file
-
+    const profilePic = req.file ? req.file.filename : null; 
     if (!profilePic) {
       return res.status(400).json({ message: "No file uploaded" });
     }

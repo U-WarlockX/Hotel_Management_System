@@ -4,13 +4,13 @@ const multer = require("multer");
 const path = require("path");
 const staffController = require("../../controllers/Uvindu_controllers/staffController");
 
-// Multer storage configuration
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./uploads"); // Directory to store uploaded files
+    cb(null, "./uploads"); 
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+    cb(null, Date.now() + path.extname(file.originalname)); 
   },
 });
 

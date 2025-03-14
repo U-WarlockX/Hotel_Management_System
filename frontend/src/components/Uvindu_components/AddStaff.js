@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { motion } from "framer-motion";
+import { Sun, SunDim, Moon } from "lucide-react"; // Icon Library
 
 const AddStaff = () => {
   const [formData, setFormData] = useState({
@@ -9,41 +11,28 @@ const AddStaff = () => {
     phone: "",
     department: "",
     jobTitle: "",
-    shifts: {
-      morning: false,
-      afternoon: false,
-      night: false,
-    },
+    shifts: { morning: false, afternoon: false, night: false },
   });
 
   const [image, setImage] = useState(null);
   const [message, setMessage] = useState("");
 
   const departments = {
-    "Front Office": ["Front Desk Manager", "Receptionist", "Guest Service Agent", "Concierge", "Bellboy/Bellman", "Night Auditor", "Reservation Agent"],
-    Housekeeping: ["Housekeeping Manager", "Room Attendant", "Housekeeping Supervisor", "Laundry Attendant", "Public Area Cleaner"],
-    "Food & Beverage": ["F&B Manager", "Restaurant Manager", "Chef (Executive, Sous, etc.)", "Waiter/Waitress", "Bartender", "Kitchen Staff (Cook, Dishwasher, etc.)", "Banquet Coordinator", "Steward"],
-    "Sales & Marketing": ["Sales Manager", "Marketing Manager", "Public Relations Manager", "Event Coordinator", "Digital Marketing Specialist"],
-    Accounting: ["Finance Manager", "Accountant", "Payroll Coordinator", "Financial Analyst"],
-    HR: ["HR Manager", "HR Assistant", "Recruitment Officer", "Training Coordinator", "Payroll Officer"],
-    "Maintenance & Engineering": ["Maintenance Manager", "Engineer", "Electrician", "Plumber", "HVAC Technician"],
-    Security: ["Security Manager", "Security Guard", "Surveillance Officer"],
-    IT: ["IT Manager", "Network Administrator", "Systems Support Specialist", "IT Technician"],
-    "Spa & Recreation": ["Spa Manager", "Spa Therapist", "Fitness Instructor", "Pool Attendant"],
-    "Purchasing & Supply": ["Purchasing Manager", "Inventory Control Officer", "Procurement Specialist"],
+    "Front Office": ["Receptionist", "Guest Service Agent", "Concierge"],
+    Housekeeping: ["Housekeeping Manager", "Room Attendant"],
+    "Food & Beverage": ["F&B Manager", "Chef", "Waiter", "Bartender"],
+    Security: ["Security Manager", "Security Guard"],
   };
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [type === "checkbox" ? "shifts" : name]: type === "checkbox" ? { ...prevData.shifts, [name]: checked } : value,
+    const { name, type, checked, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [type === "checkbox" ? "shifts" : name]: type === "checkbox" ? { ...prev.shifts, [name]: checked } : value,
     }));
   };
 
-  const handleFileChange = (e) => {
-    setImage(e.target.files[0]);
-  };
+  const handleFileChange = (e) => setImage(e.target.files[0]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,17 +40,13 @@ const AddStaff = () => {
 
     Object.entries(formData).forEach(([key, value]) => {
       if (key === "shifts") {
-        Object.entries(value).forEach(([shift, isChecked]) => {
-          formDataToSend.append(`shifts[${shift}]`, isChecked);
-        });
+        Object.entries(value).forEach(([shift, isChecked]) => formDataToSend.append(`shifts[${shift}]`, isChecked));
       } else {
         formDataToSend.append(key, value);
       }
     });
 
-    if (image) {
-      formDataToSend.append("profilePic", image);
-    }
+    if (image) formDataToSend.append("profilePic", image);
 
     try {
       const response = await axios.post("http://localhost:5000/api/staff", formDataToSend, {
@@ -70,40 +55,25 @@ const AddStaff = () => {
 
       if (response.status === 201) {
         setMessage("Staff member added successfully!");
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          department: "",
-          jobTitle: "",
-          shifts: { morning: false, afternoon: false, night: false },
-        });
+        setFormData({ firstName: "", lastName: "", email: "", phone: "", department: "", jobTitle: "", shifts: { morning: false, afternoon: false, night: false } });
         setImage(null);
       }
     } catch (error) {
       setMessage("Error adding staff. Please try again.");
-      console.error(error);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <h2 className="text-3xl font-semibold text-gray-700 mb-6">Add New Staff Member</h2>
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md border border-gray-200 space-y-6">
-        {/* First Name & Last Name */}
+    <div className="form-container">
+      <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">Add New Staff Member</h2>
+      
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Name Fields */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {["firstName", "lastName"].map((field) => (
             <div key={field}>
               <label className="block text-gray-700">{field.replace(/([A-Z])/g, " $1")}:</label>
-              <input
-                type="text"
-                name={field}
-                value={formData[field]}
-                onChange={handleChange}
-                required
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-              />
+              <input type="text" name={field} value={formData[field]} onChange={handleChange} required className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
             </div>
           ))}
         </div>
@@ -113,14 +83,7 @@ const AddStaff = () => {
           {["email", "phone"].map((field) => (
             <div key={field}>
               <label className="block text-gray-700">{field.charAt(0).toUpperCase() + field.slice(1)}:</label>
-              <input
-                type={field === "email" ? "email" : "text"}
-                name={field}
-                value={formData[field]}
-                onChange={handleChange}
-                required
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-              />
+              <input type={field === "email" ? "email" : "text"} name={field} value={formData[field]} onChange={handleChange} required className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
             </div>
           ))}
         </div>
@@ -129,13 +92,7 @@ const AddStaff = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <label className="block text-gray-700">Department:</label>
-            <select
-              name="department"
-              value={formData.department}
-              onChange={handleChange}
-              required
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-            >
+            <select name="department" value={formData.department} onChange={handleChange} required className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 bg-white cursor-pointer">
               <option value="">Select Department</option>
               {Object.keys(departments).map((dept) => (
                 <option key={dept} value={dept}>{dept}</option>
@@ -145,56 +102,48 @@ const AddStaff = () => {
 
           <div>
             <label className="block text-gray-700">Job Title:</label>
-            <select
-              name="jobTitle"
-              value={formData.jobTitle}
-              onChange={handleChange}
-              required
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-              disabled={!formData.department}
-            >
+            <select name="jobTitle" value={formData.jobTitle} onChange={handleChange} required className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 bg-white cursor-pointer" disabled={!formData.department}>
               <option value="">Select Job Title</option>
-              {formData.department &&
-                departments[formData.department].map((title) => (
-                  <option key={title} value={title}>{title}</option>
-                ))}
+              {formData.department && departments[formData.department].map((title) => (
+                <option key={title} value={title}>{title}</option>
+              ))}
             </select>
           </div>
         </div>
 
-        {/* Shifts */}
+        {/* Shift Checkboxes with Animated Icons */}
         <div>
           <label className="block text-gray-700">Shifts:</label>
           <div className="flex space-x-6">
             {["morning", "afternoon", "night"].map((shift) => (
-              <label key={shift} className="flex items-center">
-                <input
-                  type="checkbox"
-                  name={shift}
-                  checked={formData.shifts[shift]}
-                  onChange={handleChange}
-                  className="mr-2 rounded"
-                />
-                {shift.charAt(0).toUpperCase() + shift.slice(1)}
-              </label>
+              <motion.label key={shift} className="shift-checkbox">
+                <input type="checkbox" name={shift} checked={formData.shifts[shift]} onChange={handleChange} className="hidden peer" />
+                
+                <motion.div className="w-8 h-8 border-2 border-gray-400 rounded-md flex items-center justify-center"
+                  animate={{ backgroundColor: formData.shifts[shift] ? "#2563EB" : "#ffffff", borderColor: formData.shifts[shift] ? "#1E3A8A" : "#9CA3AF" }} transition={{ duration: 0.3 }}>
+                  
+                  {formData.shifts[shift] && (
+                    <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.3 }}>
+                      {shift === "morning" ? <Sun className="text-yellow-500 w-6 h-6" /> : shift === "afternoon" ? <SunDim className="text-orange-500 w-6 h-6" /> : <Moon className="text-indigo-500 w-6 h-6" />}
+                    </motion.div>
+                  )}
+                </motion.div>
+
+                <span className="text-gray-700">{shift.charAt(0).toUpperCase() + shift.slice(1)}</span>
+              </motion.label>
             ))}
           </div>
         </div>
 
-        {/* Profile Picture */}
+        {/* File Upload */}
         <div>
           <label className="block text-gray-700">Profile Picture:</label>
-          <input type="file" onChange={handleFileChange} className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" />
+          <input type="file" onChange={handleFileChange} className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 bg-white cursor-pointer" />
         </div>
 
         {/* Submit Button */}
-        <button type="submit" className="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
-          Add Staff
-        </button>
+        <button type="submit" className="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all duration-200 transform hover:scale-105">Add Staff</button>
       </form>
-
-      {/* Message Display */}
-      {message && <div className={`mt-6 p-4 rounded-md ${message.includes("success") ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>{message}</div>}
     </div>
   );
 };

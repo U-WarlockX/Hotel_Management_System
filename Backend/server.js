@@ -13,10 +13,10 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Serve profile pictures
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); 
 
 // Routes
-app.use("/api", staffRoutes); // Use staff routes
+app.use("/api", staffRoutes); 
 
 // MongoDB connection
 mongoose

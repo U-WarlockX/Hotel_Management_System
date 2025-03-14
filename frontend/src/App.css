@@ -56,44 +56,53 @@ header {
   align-items: center;
 }
 
-.sidebar {
-  width: 250px;
-  height: 100vh;
-  background-color: #f7fafc;
-  padding-top: 1rem;
-  margin-top: 0rem; 
-  position: fixed;
-  left: -250px;  /* Initially hidden */
-  transition: left 0.3s ease;
-}
+/* App.css */
 
-.sidebar.show {
-  left: 0;  /* Show the sidebar when the state is true */
-}
 
-.sidebar-links {
-  margin-top: 20px;
-}
 
-.sidebar-link {
-  display: block;
-  padding: 10px;
-  color: #333;
-  text-decoration: none;
-}
 
-.sidebar-link:hover {
-  background-color: #e2e8f0;
-}
 
-.sidebar-logo {
-  font-size: 1.5rem;
-  color: #333;
+
+
+
+
+/* AddStaff.js */
+
+/* Set up a clean background for the app */
+body {
+  font-family: 'Arial', sans-serif;
+  background: url('https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
 }
 
+/* Styling for the form container */
+.form-container {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+  width: 100%;
+  backdrop-filter: blur(10px);
+}
 
+/* Shift checkbox container */
+.shift-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
 
+.shift-checkbox:hover {
+  transform: scale(1.05);
+}
 
 
 

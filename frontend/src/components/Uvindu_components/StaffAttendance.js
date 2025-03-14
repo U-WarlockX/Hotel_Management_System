@@ -32,7 +32,7 @@ const StaffAttendance = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div>
       <h2 className="text-3xl font-semibold text-gray-800 mb-6">Mark Staff Attendance</h2>
 
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
