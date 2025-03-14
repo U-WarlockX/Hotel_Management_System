@@ -48,22 +48,6 @@ const Dashboard = () => {
 
   const handleAddStaff = () => navigate("/staff/add");
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this staff member?")) {
-      try {
-        const response = await axios.delete(
-          `http://localhost:5000/api/staff/${id}`
-        );
-        if (response.status === 200) {
-          setStaff(staff.filter((staffMember) => staffMember._id !== id));
-        }
-      } catch (err) {
-        console.error("Error deleting staff:", err);
-        alert("An error occurred while deleting the staff member.");
-      }
-    }
-  };
-
   const renderStatusBadge = (status) =>
     status === "Active" ? (
       <span className="bg-green-400 text-xs font-medium px-2.5 py-0.5 rounded-full text-white">
@@ -89,7 +73,7 @@ const Dashboard = () => {
 
       {/* Staff Statistics with Glassmorphism */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-        {[
+        {[ 
           { title: "Total Staff", value: staffStats.totalStaff },
           { title: "On Duty Today", value: staffStats.onDuty },
           { title: "Attendance Rate", value: `${staffStats.attendanceRate}%` },
@@ -100,27 +84,23 @@ const Dashboard = () => {
             key={index}
             className="p-6 rounded-lg shadow-lg border border-white/40 bg-white/30 backdrop-blur-md flex flex-col items-center"
           >
-            <h3 className="text-sm font-semibold text-gray-800 text-center">
-              {stat.title}
-            </h3>
+            <h3 className="text-sm font-bold text-black text-center">{stat.title}</h3>
             <p className="text-lg font-bold text-black">{stat.value}</p>
           </div>
         ))}
       </div>
 
-      {/* Staff Table with Glassmorphism */}
+      {/* Staff Table with Glassmorphism and Custom Scrollbar */}
       <div className="p-6 rounded-lg shadow-md border border-white/40 bg-white/30 backdrop-blur-md mt-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-6">
-          Current Staff
-        </h2>
+        <h2 className="text-lg font-semibold text-black mb-6">Current Staff</h2>
         <div className="overflow-x-auto">
-          <div className="max-h-80 overflow-y-auto">
+          <div className="max-h-80 overflow-y-auto custom-scrollbar">
             <table className="min-w-full table-auto text-left">
               <thead>
                 <tr className="bg-white/40 border-b">
-                  {["Profile", "Name", "Role", "Department", "Status", "Actions"].map(
+                  {["Profile", "Name", "Role", "Department", "Status"].map(
                     (header, i) => (
-                      <th key={i} className="py-3 px-6 text-sm font-medium text-gray-700">
+                      <th key={i} className="py-3 px-6 text-sm font-medium text-black">
                         {header}
                       </th>
                     )
@@ -129,7 +109,10 @@ const Dashboard = () => {
               </thead>
               <tbody>
                 {staff.slice(0, 5).map((staffMember) => (
-                  <tr key={staffMember._id} className="border-b hover:bg-white/40">
+                  <tr
+                    key={staffMember._id}
+                    className="border-b hover:bg-white/40 transition-all duration-300"
+                  >
                     <td className="py-3 px-6">
                       <img
                         src={
@@ -141,19 +124,13 @@ const Dashboard = () => {
                         className="w-12 h-12 rounded-full object-cover"
                       />
                     </td>
-                    <td className="py-3 px-6 text-gray-800">
+                    <td className="text-sm py-3 px-6 text-black">
                       {staffMember.firstName} {staffMember.lastName}
                     </td>
-                    <td className="py-3 px-6 text-gray-600">{staffMember.jobTitle}</td>
-                    <td className="py-3 px-6 text-gray-600">{staffMember.department}</td>
-                    <td className="py-3 px-6 text-gray-600">{renderStatusBadge(staffMember.status)}</td>
-                    <td className="py-3 px-6">
-                      <button
-                        onClick={() => handleDelete(staffMember._id)}
-                        className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
-                      >
-                        Delete
-                      </button>
+                    <td className="text-sm py-3 px-6 text-black">{staffMember.jobTitle}</td>
+                    <td className="text-sm py-3 px-6 text-black">{staffMember.department}</td>
+                    <td className="text-sm py-3 px-6 text-black">
+                      {renderStatusBadge(staffMember.status)}
                     </td>
                   </tr>
                 ))}
