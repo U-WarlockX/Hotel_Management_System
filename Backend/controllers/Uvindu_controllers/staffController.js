@@ -1,4 +1,5 @@
 const Staff = require("../../models/Uvindu_models/StaffModel");
+const nodemailer = require("nodemailer");
 
 // Get all staff
 exports.getAllStaff = async (req, res) => {
@@ -13,7 +14,7 @@ exports.getAllStaff = async (req, res) => {
 
 exports.addStaff = async (req, res) => {
   const { firstName, lastName, email, phone, jobTitle, department, shifts } = req.body;
-  const profilePic = req.file ? req.file.filename : null; 
+  const profilePic = req.file ? req.file.filename : null;
 
   if (!firstName || !lastName || !email || !phone || !jobTitle || !department || !shifts) {
     return res.status(400).json({ message: "All fields are required." });
@@ -33,6 +34,48 @@ exports.addStaff = async (req, res) => {
 
   try {
     const savedStaff = await newStaff.save();
+
+    // Send email to the admin after a new staff is added
+    const activeShifts = Object.keys(shifts)
+      .filter(shift => shifts[shift]) 
+      .map(shift => shift.charAt(0).toUpperCase() + shift.slice(1));
+
+    const shiftList = activeShifts.length > 0 ? activeShifts.join(', ') : 'None'; 
+
+    const message = `A new staff member has been added:\n\n
+    Name: ${firstName} ${lastName}\n
+    Email: ${email}\n
+    Phone: ${phone}\n
+    Job Title: ${jobTitle}\n
+    Department: ${department}\n
+    Shifts: ${shiftList}\n`;
+
+    // Email configuration
+    const transporter = nodemailer.createTransport({
+      service: 'gmail', 
+      auth: {
+        user: process.env.ADMIN_EMAIL, 
+        pass: process.env.ADMIN_PASSWORD,
+      },
+    });
+
+    // Email options
+    const mailOptions = {
+      from: process.env.ADMIN_EMAIL,
+      to: process.env.ADMIN_EMAIL,
+      subject: 'New Staff Member Added',
+      text: message,
+    };
+
+    // Send the email
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.error('Error sending email:', err);
+      } else {
+        console.log('Email sent:', info.response);
+      }
+    });
+
     res.status(201).json({
       message: "Staff added successfully",
       staff: savedStaff,
