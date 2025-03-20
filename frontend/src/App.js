@@ -6,6 +6,7 @@ import Dashboard from "./components/Uvindu_components/Dashboard";
 import StaffList from "./components/Uvindu_components/StaffList";
 import AddStaff from "./components/Uvindu_components/AddStaff";
 import StaffAttendance from "./components/Uvindu_components/StaffAttendance";  // Updated for attendance
+import staffDataExport from "./components/Uvindu_components/staffDataExport";  // Import staffDataExport
 import "./App.css";
 
 function App() {
@@ -25,7 +26,8 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/staff" element={<StaffList />} />
             <Route path="/staff/add" element={<AddStaff />} />
-            <Route path="/attendance" element={<StaffAttendance />} /> {/* Updated route */}
+            <Route path="/attendance" element={<StaffAttendance />} />
+            <Route path="/staff/export" element={<staffDataExport />} /> {/* Updated route */}
           </Routes>
         </div>
       </div>
