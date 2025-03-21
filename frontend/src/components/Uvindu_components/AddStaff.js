@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Sun, SunDim, Moon } from "lucide-react"; // Icon Library
+import { Sun, SunDim, Moon } from "lucide-react"; 
 import axios from "axios";
 
 const AddStaff = () => {
