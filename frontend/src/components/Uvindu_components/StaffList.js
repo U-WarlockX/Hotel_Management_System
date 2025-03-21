@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import StaffPopup from './StaffPopup'; 
 
 const StaffList = () => {
   const [staff, setStaff] = useState([]);
@@ -8,6 +9,8 @@ const StaffList = () => {
   const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(6);
+  const [selectedStaff, setSelectedStaff] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,6 +42,15 @@ const StaffList = () => {
 
   const handleUpdate = (id) => {
     navigate(`/staff/update/${id}`);
+  };
+
+  const handleView = (staffMember) => {
+    setSelectedStaff(staffMember);
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -113,6 +125,12 @@ const StaffList = () => {
                         >
                           Delete
                         </button>
+                        <button 
+                          onClick={() => handleView(staffMember)}
+                          className="px-3 py-1 text-xs bg-green-500 text-white rounded-md hover:bg-green-600 transition"
+                        >
+                          View
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -154,6 +172,13 @@ const StaffList = () => {
           Next
         </button>
       </div>
+
+      {/* Popup */}
+      <StaffPopup 
+        selectedStaff={selectedStaff} 
+        showPopup={showPopup} 
+        handleClosePopup={handleClosePopup} 
+      />
     </div>
   );
 };
