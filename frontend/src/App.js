@@ -5,6 +5,7 @@ import Header from "./components/Uvindu_components/Header"; // Import Header
 import Dashboard from "./components/Uvindu_components/Dashboard";
 import StaffList from "./components/Uvindu_components/StaffList";
 import AddStaff from "./components/Uvindu_components/AddStaff";
+ import PaymentComponent from "./components/Dineth_Components/PaymentComponent";
 import StaffAttendance from "./components/Uvindu_components/StaffAttendance"; // Updated for attendance
 import StaffDataExport from "./components/Uvindu_components/staffDataExport"; // Correct file name casing
 import "./App.css";
@@ -28,6 +29,11 @@ function App() {
             <Route path="/staff/add" element={<AddStaff />} />
             <Route path="/attendance" element={<StaffAttendance />} />
             <Route path="/staff/export" element={<StaffDataExport />} /> {/* Corrected route */}
+
+
+            <Route path="/payment" element={<PaymentComponent/>} />
+
+            
           </Routes>
         </div>
       </div>

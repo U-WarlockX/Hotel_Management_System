@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const path = require("path");
 const staffRoutes = require("./routes/Uvindu_routes/staffRoutes");
 const authRoutes = require("./routes/Uvindu_routes/LoginRoutes");
+const paymentRoutes = require("./routes/Dineth_routes/paymentRoutes");
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 app.use("/api", staffRoutes); 
 app.use("/api/auth", authRoutes); // Ensure correct routing
+app.use("/api/payment", paymentRoutes);
 
 // MongoDB connection
 mongoose
